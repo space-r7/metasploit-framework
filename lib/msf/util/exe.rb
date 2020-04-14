@@ -193,6 +193,18 @@ require 'msf/core/exe/segment_appender'
       end
       # XXX: Add remaining MIPSLE systems here
     end
+
+    if arch.index(ARCH_SHLE)
+      if plat.index(Msf::Module::Platform::Linux)
+        return to_linux_shle_elf(framework, code)
+      end
+    end
+
+    if arch.index(ARCH_SHBE)
+      if plat.index(Msf::Module::Platform::Linux)
+        return to_linux_shbe_elf(framework, code)
+      end
+    end
     nil
   end
 
@@ -1182,6 +1194,39 @@ require 'msf/core/exe/segment_appender'
   # @return           [String] Returns an elf
   def self.to_linux_mipsbe_elf(framework, code, opts = {})
     to_exe_elf(framework, opts, "template_mipsbe_linux.bin", code, true)
+  end
+
+  # self.to_linux_shle_elf
+  # Little Endian
+  # @param framework [Msf::Framework]
+  # @param code       [String]
+  # @param opts       [Hash]
+  # @option           [String] :template
+  # @return           [String] Returns an elf
+  def self.to_linux_shle_elf(framework, code, opts = {})
+    to_exe_elf(framework, opts, "template_shle_linux.bin", code)
+  end
+
+  # self.to_linux_shle_elf_dll
+  # Little Endian
+  # @param framework [Msf::Framework]
+  # @param code       [String]
+  # @param opts       [Hash]
+  # @option           [String] :template
+  # @return           [String] Returns an elf-so
+  def self.to_linux_shle_elf_dll(framework, code, opts = {})
+    to_exe_elf(framework, opts, "template_shle_linux_dll.bin", code)
+  end
+
+  # self.to_linux_shbe_elf
+  # Big Endian
+  # @param framework [Msf::Framework]
+  # @param code       [String]
+  # @param opts       [Hash]
+  # @option           [String] :template
+  # @return           [String] Returns an elf
+  def self.to_linux_shbe_elf(framework, code, opts = {})
+    to_exe_elf(framework, opts, "template_shbe_linux.bin", code, true)
   end
 
   # self.to_exe_vba
@@ -2190,6 +2235,10 @@ require 'msf/core/exe/segment_appender'
           to_linux_mipsbe_elf(framework, code, exeopts)
         when ARCH_MIPSLE
           to_linux_mipsle_elf(framework, code, exeopts)
+        when ARCH_SHLE
+          to_linux_shle_elf(framework, code, exeopts)
+        when ARCH_SHBE
+          to_linux_shbe_elf(framework, code, exeopts)
         end
       elsif plat && plat.index(Msf::Module::Platform::BSD)
         case arch
@@ -2216,6 +2265,9 @@ require 'msf/core/exe/segment_appender'
           to_linux_x64_elf_dll(framework, code, exeopts)
         when ARCH_ARMLE
           to_linux_armle_elf_dll(framework, code, exeopts)
+        when ARCH_SHLE
+          to_linux_shle_elf_dll(framework, code, exeopts)
+        when ARCH_SHBE
         end
       end
     when 'macho', 'osx-app'
